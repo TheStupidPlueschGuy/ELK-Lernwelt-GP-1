@@ -14,6 +14,8 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 
 .scr{display:none;position:relative;z-index:1}
 .scr.on{display:block}
+/* FIX: char screen braucht flex für Zentrierung, nicht block */
+#scr-char.on{display:flex}
 
 /* ════ CHAR SCREEN ════ */
 #scr-char{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1rem}
@@ -997,6 +999,11 @@ function runQuizGame(questions,gameId,accent){
         updateHUD();
         fb.className='fb nok';
         fb.innerHTML=`<strong>Falsch.</strong>${q.opts[i].why?' '+q.opts[i].why:''} Richtig wäre: "${q.opts.find(o=>o.ok).t}"`;
+        // FIX: Game-Over wenn Leben = 0
+        if(P.hp<=0){
+          setTimeout(()=>showOv('💀','Keine Leben mehr!','Steh auf und versuch es nochmal!',0,()=>{P.hp=P.maxHp;updateHUD();}),600);
+          return;
+        }
       }
       const nb=document.createElement('button');nb.className='btn btn-p';nb.style.background=accent;nb.textContent='→ Weiter';
       nb.onclick=()=>{qi++;render();};
